@@ -91,9 +91,10 @@ CREATE TABLE Orders (
 );
 
 CREATE TABLE OrderDetail (
-    orderId INT PRIMARY KEY ,
+    orderId INT NOT NULL REFERENCES Orders(orderId) ,
     itemId INT NOT NULL REFERENCES FoodMenu(ItemId),
-    quantity INT DEFAULT 1 NOT NULL CHECK(quantity > 0)
+    quantity INT DEFAULT 1 NOT NULL CHECK(quantity > 0),
+    CONSTRAINT OrderDetails_pk PRIMARY KEY (orderId, itemId)
 );
 
 CREATE TABLE Billing (
