@@ -5,7 +5,7 @@ CREATE SCHEMA restaurantSystem;
 USE restaurantSystem;
 
 CREATE TABLE Address (
-    addressId INT PRIMARY KEY,
+    addressId VARCHAR(45) PRIMARY KEY,
     street VARCHAR(45) NOT NULL,
     city VARCHAR(25) NOT NULL,
     state VARCHAR(24) NOT NULL,
@@ -18,13 +18,13 @@ CREATE TABLE UserRole (
 );
 
 CREATE TABLE Users (
-    userId INT PRIMARY KEY,
+    userId VARCHAR(45) PRIMARY KEY,
     fname VARCHAR(25) NOT NULL,
     lname VARCHAR(25) NOT NULL,
-    addressId INT NOT NULL REFERENCES Address(addressId),
+    addressId VARCHAR(45) NOT NULL REFERENCES Address(addressId),
     phone NUMERIC(10) NOT NULL,
     email VARCHAR(30) NOT NULL,
-    username VARCHAR(25) NOT NULL,
+    username VARCHAR(25) UNIQUE NOT NULL,
     password VARCHAR(25) NOT NULL,
     roleCode VARCHAR(5) NOT NULL REFERENCES UserRole(roleCode)
 );
@@ -34,27 +34,27 @@ CREATE TABLE EmployeeRole (
     roleName VARCHAR(45) NOT NULL
 );
 
-CREATE TABLE Employee (
-    employeeId INT PRIMARY KEY,
+CREATE or replace TABLE Employee (
+    employeeId VARCHAR(45) PRIMARY KEY,
     role VARCHAR(5) NOT NULL REFERENCES EmployeeRole(roleCode),
-    dateOfJoin DATE NOT NULL,
-    Salary INT NOT NULL,
-    userId INT NOT NULL REFERENCES Users(userId)
+    dateOfJoin DATE NOT NULL DEFAULT CURRENT_DATE,
+    Salary INT NOT NULL DEFAULT 5000,
+    userId VARCHAR(45) NOT NULL UNIQUE REFERENCES Users(userId)
 );
 
 CREATE TABLE Customer (
-    customerId INT PRIMARY KEY,
-    userId INT NOT NULL REFERENCES Users(userId),
+    customerId VARCHAR(45) PRIMARY KEY,
+    userId VARCHAR(45) NOT NULL UNIQUE REFERENCES Users(userId),
     custCredits INT DEFAULT 0 CHECK(custCredits >= 0)
 );
 
 CREATE TABLE Payroll (
-    paymentId INT PRIMARY KEY,
+    paymentId VARCHAR(45) PRIMARY KEY,
     month VARCHAR(10) NOT NULL
         CHECK(month IN ('JAN','FEB','MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC')),
     year NUMERIC(4) NOT NULL,
     amount INT NOT NULL CHECK(amount > 0),
-    employeeId INT NOT NULL REFERENCES Employee(employeeId)
+    employeeId VARCHAR(45) NOT NULL REFERENCES Employee(employeeId)
 );
 
 CREATE TABLE TableStatus (
@@ -69,9 +69,9 @@ CREATE TABLE Tables (
 );
 
 CREATE TABLE Booking (
-    bookingId INT PRIMARY KEY ,
+    bookingId INT PRIMARY KEY,
     tableNumber INT NOT NULL REFERENCES Tables(tableNumber),
-    customerId INT NOT NULL REFERENCES Customer(customerId),
+    customerId VARCHAR(45) NOT NULL REFERENCES Customer(customerId),
     date DATE NOT NULL DEFAULT CURRENT_DATE,
     time TIME NOT NULL DEFAULT CURRENT_TIME
 );
@@ -85,7 +85,7 @@ CREATE TABLE FoodMenu (
 
 CREATE TABLE Orders (
     orderId INT PRIMARY KEY ,
-    customerId INT NOT NULL REFERENCES Customer(customerId),
+    customerId VARCHAR(45) NOT NULL REFERENCES Customer(customerId),
     bookingId INT REFERENCES Booking(bookingId),
     OrderType VARCHAR(10) NOT NULL CHECK(OrderType IN ('Delivery', 'Dine In'))
 );
@@ -106,7 +106,7 @@ CREATE TABLE Billing (
 );
 
 CREATE TABLE Payment (
-    paymentId INT PRIMARY KEY ,
+    paymentId VARCHAR(45) PRIMARY KEY ,
     billingId INT NOT NULL REFERENCES Billing(billingId),
     type VARCHAR(10) NOT NULL CHECK(type IN ('cash', 'card', 'credit','CustCredits')),
     amount INT NOT NULL CHECK(amount > 0),
@@ -118,12 +118,14 @@ CREATE TABLE Delivery (
     deliveryId INT PRIMARY KEY ,
     orderId INT NOT NULL REFERENCES Orders(orderId),
     billingId INT NOT NULL REFERENCES Billing(billingId),
-    addressId INT NOT NULL REFERENCES Address(addressId),
-    assignee INT NOT NULL REFERENCES Employee(employeeId),
+    addressId VARCHAR(45) NOT NULL REFERENCES Address(addressId),
+    assignee VARCHAR(45) NOT NULL REFERENCES Employee(employeeId),
     status VARCHAR(15) NOT NULL CHECK(status IN ('Preparing','On the way', 'Delayed', 'Delivered'))
 );
 
 
-
+insert into userRole values("C", "Customer");
+insert into userRole values("E", "Employee");
+insert into employeeRole values("C", "Chef");
 
 
