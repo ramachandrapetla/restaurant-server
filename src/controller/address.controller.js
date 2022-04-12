@@ -29,7 +29,7 @@ exports.create = (req, res) => {
     });
 };
 
-// Retrieve all Tutorials from the database.
+// Retrieve all Address from the database.
 exports.findAll = (req, res) => {
 
     Address.getAll((err, data) => {

@@ -26,4 +26,38 @@ User.create = (newUser, result) => {
     });
 };
 
+User.findByUserName = (userName, result) => {
+    connection.query(`SELECT * FROM Users WHERE userName = ?`, [userName], (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(err, null);
+            return;
+        }
+
+        if (res.length) {
+            console.log("found user: ", res[0]);
+            result(null, res[0]);
+            return;
+        }
+
+        // not found Tutorial with the id
+        result({ kind: "not_found" }, null);
+    });
+};
+
+User.getAllUsers = (result) => {
+    let query = "SELECT * FROM Users";
+
+    connection.query(query, (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(null, err);
+            return;
+        }
+
+        console.log("Users: ", res);
+        result(null, res);
+    });
+};
+
 module.exports = User;

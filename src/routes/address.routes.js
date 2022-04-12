@@ -1,6 +1,7 @@
 const {connection} = require('../config/db.config');
 const express = require('express');
 const address = require('../controller/address.controller');
+const {authJwt} = require('../middleware');
 const router = express.Router();
 
 
@@ -10,10 +11,10 @@ router.use((req, res, next) => {
     next();
 })
 
-router.post("/createRecord", address.create);
-router.get("/findAll", address.findAll);
-router.put("/update/:addressid", address.update);
-router.get("/findById/:addressId", address.findOne)
+router.post("/createRecord", [authJwt.verifyToken], address.create);
+router.get("/findAll", [authJwt.verifyToken], address.findAll);
+router.put("/update/:addressid", [authJwt.verifyToken], address.update);
+router.get("/findById/:addressId", [authJwt.verifyToken], address.findOne)
 
 
 module.exports = router;

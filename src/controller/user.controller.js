@@ -2,6 +2,7 @@ const User = require("../models/user.model");
 const Address = require("../models/address.model");
 const Customer = require("../models/customer.model");
 const Employee = require("../models/employee.model");
+const bcrypt = require("bcryptjs");
 const uuid = require('uuid');
 
 
@@ -32,7 +33,7 @@ exports.create = (req, res) => {
         phone: req.body.user.phone,
         email: req.body.user.email,
         userName: req.body.user.userName,
-        password: req.body.user.password,
+        password: bcrypt.hashSync(req.body.user.password, 4),
         roleCode: req.body.userRole.roleCode
     });
 
@@ -44,6 +45,7 @@ exports.create = (req, res) => {
                     err.message || "Error in creating User Address"
             });
         else {
+
             User.create(user, (err, userData) => {
                 if (err)
                     res.status(500).send({
@@ -90,3 +92,13 @@ exports.create = (req, res) => {
     });
 };
 
+exports.getAllUsers = (req, res) => {
+    User.getAllUsers((err, data) => {
+        if (err)
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while retrieving users."
+            });
+        else res.send(data);
+    })
+}

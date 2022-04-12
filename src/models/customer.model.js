@@ -42,7 +42,7 @@ Customer.updateCustCreditsById = (userId, changeValue, result) => {
 };
 
 Customer.findByUserId = (userId, result) => {
-    connection.query(`SELECT * FROM Customer WHERE userId = ${userId}`, (err, res) => {
+    connection.query('SELECT * FROM Customer WHERE userId =  ?', [userId], (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(err, null);
