@@ -2,6 +2,7 @@ const Booking = require("../models/booking.model");
 const uuid = require('uuid');
 const User = require("../models/user.model");
 const Customer = require("../models/customer.model");
+const Table = require("../models/tables.model");
 
 // Create and Save a new Tutorial
 exports.newBooking = (req, res) => {
@@ -17,7 +18,7 @@ exports.newBooking = (req, res) => {
         if (err)
             res.status(500).send({
                 message:
-                    err.message || "Some error occurred while creating the booking."
+                    err.message || "Some error occurred while creating the booking. [getting customer data]"
             });
         else {
             // Save Tutorial in the database
@@ -31,9 +32,20 @@ exports.newBooking = (req, res) => {
                 if (err)
                     res.status(500).send({
                         message:
-                            err.message || "Some error occurred while creating the booking."
+                            err.message || "Some error occurred while creating the booking. [make booking]"
                     });
-                else res.send(data);
+                else {
+                    Table.updateStatus(booking.tableNumber, "O" , (err, data) => {
+                        if (err)
+                            res.status(500).send({
+                                message:
+                                    err.message || "Some error occurred while updating the tableStatus."
+                            });
+
+                        else res.send(data);
+                    })
+                    
+                }
             });
         }
     });
@@ -53,3 +65,15 @@ exports.findAll = (req, res) => {
         else res.send(data);
     });
 };
+
+exports.getBookingsById = (req, res) => {
+    const userId = req.params.userId;
+    Booking.getBookingsByUserId(userId, (err, data) => {
+        if (err)
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while retrieving bookings."
+            });
+        else res.send(data);
+    });
+}

@@ -7,6 +7,7 @@ const foodMenu = require('./src/routes/food-menu.routes');
 const auth = require('./src/routes/auth.routes');
 const tables = require('./src/routes/tables.routes');
 const booking = require('./src/routes/booking.routes');
+const orders = require('./src/routes/orders.routes');
 
 var corsOptions = {
     origin: "http://localhost:3000"
@@ -22,6 +23,7 @@ app.use('/api/foodMenu', foodMenu);
 app.use('/api/auth', auth);
 app.use('/api/tables', tables);
 app.use('/api/booking', booking);
+app.use('/api/orders', orders);
 
 app.listen(3001, () => {
     console.log("Hey, your server is running on port 3001");

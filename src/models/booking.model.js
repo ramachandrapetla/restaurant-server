@@ -18,6 +18,20 @@ Booking.newBooking = (newBooking, result) => {
     });
 };
 
+Booking.getBookingsByUserId = (userId, result) => {
+    let query = "SELECT Booking.* FROM Booking INNER JOIN Customer ON Customer.customerId = Booking.customerId where Customer.userId = ?";
+    connection.query(query, [userId], (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(null, err);
+            return;
+        }
+
+        console.log("Bookings: ", res);
+        result(null, res);
+    })
+}
+
 Booking.getAll = (result) => {
     let query = "SELECT * FROM Booking";
 

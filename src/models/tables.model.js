@@ -20,9 +20,9 @@ Table.addTable = (newTable, result) => {
     });
 };
 
-Table.updateTable = (tableNumber, statusCode, result) => {
+Table.updateStatus = (tableNumber, statusCode, result) => {
     connection.query("UPDATE tables SET statusCode = ? WHERE tableNumber = ?", 
-    [tableNumber, statusCode], (err, res) => {
+    [statusCode, tableNumber], (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(err, null);
@@ -44,6 +44,21 @@ Table.getAllTables = (result) => {
     let query = "SELECT * FROM tables";
 
     connection.query(query, (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(null, err);
+            return;
+        }
+
+        console.log("Tables: ", res);
+        result(null, res);
+    });
+};
+
+Table.getAllAvailableTables = (result) => {
+    let query = "SELECT * FROM tables WHERE statusCode = ?";
+
+    connection.query(query, ["A"], (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(null, err);

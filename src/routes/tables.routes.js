@@ -10,5 +10,6 @@ router.use((req, res, next) => {
 router.post('/addTable', tables.addTable);
 router.post('/updateTableStatus', tables.updateTableStatus);
 router.get('/getAllTables', tables.getAllTables);
+router.use('/getAllAvailableTables', tables.getAllAvailableTables);
 
 module.exports = router;

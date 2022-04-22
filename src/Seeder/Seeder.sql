@@ -91,7 +91,7 @@ CREATE TABLE Orders (
 );
 
 CREATE TABLE OrderDetail (
-    orderId VARCHAR(45) NOT NULL REFERENCES Orders(orderId) ,
+    orderId VARCHAR(45) NOT NULL REFERENCES Orders(orderId),
     itemId VARCHAR(45) NOT NULL REFERENCES FoodMenu(ItemId),
     quantity INT DEFAULT 1 NOT NULL CHECK(quantity > 0),
     CONSTRAINT OrderDetails_pk PRIMARY KEY (orderId, itemId)

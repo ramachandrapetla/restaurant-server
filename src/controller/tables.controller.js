@@ -26,7 +26,7 @@ exports.addTable = (req, res) => {
     });
 };
 
-// Retrieve all Address from the database.
+// Retrieve all tables from the database.
 exports.getAllTables = (req, res) => {
 
     Tables.getAllTables((err, data) => {
@@ -39,6 +39,18 @@ exports.getAllTables = (req, res) => {
     });
 };
 
+// Retrieve all tables availble(status) from the database.
+exports.getAllAvailableTables = (req, res) => {
+
+    Tables.getAllAvailableTables((err, data) => {
+        if (err)
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while retrieving tables."
+            });
+        else res.send(data);
+    });
+};
 
 exports.updateTableStatus = (req, res) => {
     // Validate Request
@@ -50,7 +62,7 @@ exports.updateTableStatus = (req, res) => {
 
     console.log(req.body);
 
-    Tables.updateTable(
+    Tables.updateStatus(
         req.body.tableNumber,
         req.body.statusCode,
         (err, data) => {

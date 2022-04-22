@@ -11,8 +11,9 @@ router.use((req, res, next) => {
     next();
 })
 
-router.post("/makeReservation", booking.newBooking);
-router.get("/getBookingList/", booking.findAll);
+router.post("/makeReservation",[authJwt.verifyToken], booking.newBooking);
+router.get("/getBookingList/", [authJwt.verifyToken], booking.findAll);
+router.get("/getBookingsById/:userId", [authJwt.verifyToken], booking.getBookingsById);
 
 
 module.exports = router;
