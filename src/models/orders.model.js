@@ -10,6 +10,7 @@ const Order = function(order) {
 
 
 Order.placeOrder = (newOrder, result) => {
+
     console.log("Order Details : ", newOrder);
     connection.query("INSERT INTO Orders SET ?", newOrder, (err, res) => {
         if (err) {

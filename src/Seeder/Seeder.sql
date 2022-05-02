@@ -14,7 +14,7 @@ CREATE TABLE Address (
 
 CREATE TABLE UserRole (
     roleCode VARCHAR(5) PRIMARY KEY,
-    roleName VARCHAR(45) NOT NULL
+    roleName VARCHAR(45) NOT NULLrs
 );
 
 CREATE TABLE Users (
@@ -126,6 +126,14 @@ CREATE TABLE Delivery (
 
 insert into userRole values("C", "Customer");
 insert into userRole values("E", "Employee");
-insert into employeeRole values("C", "Chef");
+insert into userRole values("A", "Admin");
 
+INSERT INTO employeeRole VALUES("C", "Chef");
+INSERT INTO employeeRole VALUES("W", "Waiter");
+INSERT INTO employeeRole VALUES("M", "Manager");
 
+INSERT INTO tableStatus VALUES("A", "Available");
+INSERT INTO tableStatus VALUES("D", "Dirty");
+INSERT INTO tableStatus VALUES("M", "Maintenance");
+INSERT INTO tableStatus VALUES("NA", "Discarded");
+INSERT INTO tableStatus VALUES("O", "Occupied");

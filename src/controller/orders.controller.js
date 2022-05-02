@@ -12,29 +12,34 @@ exports.placeOrder = (req, res) => {
         });
     }
 
-    Customer.findByUserId(req.body.userId, (err, data) => {
+    Customer.findByUserId(req.body.orderData[0].userId, (err, data) => {
         if (err)
             res.status(500).send({
                 message:
                     err.message || "Some error occurred while placing order"
             });
         else {
-            // Create a Order
-            const order = new Order({
+            console.log("request Data: " + req.body.orderData);
+            let orderData = {
                 orderId: "ORDE-" + uuid.v4(),
                 customerId: data.customerId,
-                bookingId: req.body.bookingId,
-                orderType: req.body.orderType
+                bookingId: req.body.orderData[0].bookingId || null,
+                orderType: req.body.orderData[0].orderType
+            }
+
+            let orderDetails = []
+            req.body.orderData.forEach(item => {
+                let listItem = {
+                    orderId: orderData.orderId,
+                    itemId: item.itemId,
+                    quantity: item.quantity
+
+                }
+                orderDetails.push(listItem);
             });
 
-            const orderDetail = new OrderDetail({
-                orderId: order.orderId,
-                itemId: req.body.itemId,
-                quantity: req.body.quantity
-            });
 
-
-            Order.placeOrder(order, (err, orderData) => {
+            Order.placeOrder(orderData, (err, orderData) => {
 
                 if (err)
                     res.status(500).send({
@@ -42,7 +47,7 @@ exports.placeOrder = (req, res) => {
                             err.message || "Some error occurred while placing order"
                     });
                 else {
-                    OrderDetail.insertDetails(orderDetail, (err, detailsData) => {
+                    OrderDetail.insertDetails(orderDetails, (err, detailsData) => {
                         if (err)
                         res.status(500).send({
                             message:
@@ -50,8 +55,8 @@ exports.placeOrder = (req, res) => {
                         });
                         else {
                             res.send({
-                                orderId: order.orderId,
-                                message: "Order placed successfully"
+                                orderId: orderData.orderId,
+                                message: "Order placed successfully!!"
                             })
                         }
                     })

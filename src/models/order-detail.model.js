@@ -7,16 +7,19 @@ const OrderDetail =  function(orderDetail){
 };
 
 OrderDetail.insertDetails = (orderDetail, result) => {
-    console.log("Order Details : ", orderDetail);
-    connection.query("INSERT INTO OrderDetail SET ?", orderDetail, (err, res) => {
-        if (err) {
-            console.log("error: ", err);
-            result(err, null);
-            return;
-        }
-
-        result(null, { ...orderDetail });
-    });
+    console.log("Order-Details.model.js : ", orderDetail);
+    let flag = 0;
+    for(var i=0; i< orderDetail.length; i++){
+        connection.query("INSERT INTO OrderDetail SET ?", orderDetail[i], (err, res) => {
+            if (err) {
+                console.log("Error Occured: ", err);
+                result(err, null);
+                flag = 1
+                return ;
+            }
+        });
+    }
+    result(null, {message: "success"});
 }
 
 module.exports = OrderDetail;
